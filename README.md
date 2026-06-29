@@ -20,31 +20,3 @@ graph TD
     Engine -->|Optimistic Lock| DB[(PostgreSQL)]
     Engine -->|Audit| EventStore[(Event Table)]
     Engine -.->|Anchor| Notary[External Notary]
----
-
-### 2. Docker Compose (Infraestrutura)
-Crie um arquivo chamado `docker-compose.yml` na raiz. Isso permite que qualquer pessoa (ou você na banca) rode o sistema com um comando.
-
-```yaml
-version: '3.8'
-services:
-  db:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: ledger
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-    ports:
-      - "5432:5432"
-
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    environment:
-      DB_HOST: db
-      DB_USER: user
-      DB_PASSWORD: password
-      JWT_SECRET: super-secret-key-that-should-be-in-env-vars
-    depends_on:
-      - db
